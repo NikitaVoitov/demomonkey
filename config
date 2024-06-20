@@ -1,0 +1,80 @@
+[Options]
+; If you don't like this base template click on 'Settings' at the left
+; side and change it to your own needs!
+
+; Script only run on the demo environments by default
+@include[] = /^https?://app.us1.signalfx.com/.*$/
+
+; Gets rid of Errors in the Controller
+!querySelector(.platform-notification-message-error , style.display) = none
+
+; Make the use of appd commands easier by importing the namespace
+@namespace[] = appdynamics
+
+frontend-demo-us-store = eclaire-frontend-app
+
+[UX metrics]
+!replace(nko11y.com/cart/checkout, , [data-test\="panel-view-row-lcpByPage-clsByPage-fidByPage"] .CenterEllipsisstyled__PartC-rum-sc-1jyrjb6-4, textContent) = /revenue/report
+!replace(nko11y.com/product/<?>, , [data-test\="panel-view-row-lcpByPage-clsByPage-fidByPage"] .CenterEllipsisstyled__PartC-rum-sc-1jyrjb6-4, textContent) = /revenue/ai/predict
+
+!replace(us.splu, , [data-test\="panel-view-row-lcpByPage-clsByPage-fidByPage"] .CenterEllipsisstyled__PartA-rum-sc-1jyrjb6-2, textContent) = us.eclaire.com
+!replace(https://frontend-us.spl, , [data-test\="panel-view-row-lcpByPage-clsByPage-fidByPage"] .CenterEllipsisstyled__PartA-rum-sc-1jyrjb6-2, textContent) = https://frontend-us.eclaire.com
+
+
+[RUM Sessions list]
+!replace(https://frontend-us.splunko11y.com/cart/checkout, , .SessionsTablestyled__TruncatedCell-rum-sc-1fz35iv-11, textContent) = https://frontend-us.eclaire.com/revenue/report
+
+[Session data]
+!replace(https://frontend-us.splu, , [data-test\="span-row-false-ee3e5ed1c471a3a1"] .CenterEllipsisstyled__PartA-rum-sc-1jyrjb6-2, textContent) = https://frontend-us.eclaire.com
+!replace(nko11y.com/cart/checkout, , .CenterEllipsisstyled__PartB-rum-sc-1jyrjb6-3 .CenterEllipsisstyled__PartC-rum-sc-1jyrjb6-4, textContent) = /revenue/report
+
+
+;!replace(https://frontend-us.splunko11y.com/cart/checkout, , .PopoverStyles__StyledContent-rum-sc-1nahsvw-2 [data-test\="center-ellipsis-hover-content"] .CenterEllipsisstyled__HoverContent-rum-sc-1jyrjb6-1, textContent) = https://frontend-us.eclaire.com/revenue/report
+
+
+; urls in trace
+!replace(splu, , [data-test\="span-label-sub-title"] .CenterEllipsisstyled__PartA-rum-sc-1jyrjb6-2, textContent) = eclaire.com
+!replace(nko11y.com/cart/checkout, , [data-test\="span-label-sub-title"] .CenterEllipsisstyled__PartC-rum-sc-1jyrjb6-4, textContent) = /revenue/report
+
+;business workflow
+!replace(/cart/checkout, , .operation, textContent) = /revenue/report
+!replace(frontend:/cart/checkout, , .TraceSummary__StyledExternalLink-rum-sc-9n6kjf-8, textContent) = frontend:/revenue/report
+
+;report service
+!replace(checkoutservice, , .TooltipStyles__StyledContent-rum-sc-67fvgm-4, textContent) = reportservice
+!replace(checkoutservice, , .SpanCountPillListstyles__SpanServiceNameLabelTitle-rum-sc-11a52rg-14, textContent) = reportservice
+
+;ai service
+!replace(paymentservice, , [data-test\="span-count-pill-paymentservice"] .SpanCountPillListstyles__SpanServiceNameLabelTitle-rum-sc-11a52rg-14, textContent) = aiservice
+;!replace(paymentservice, , [data-test\="span-count-pill-paymentservice"] .TooltipStyles__StyledContent-rum-sc-67fvgm-4, textContent) = aiservice
+
+[Service map]
+!replace(checkoutservice, , [data-test\="apm-automation-node-checkoutservice"] .TextWithBackground___StyledText2-apm-sc-zvf4tb-3, textContent) = reportservice
+!replace(paymentservice, , [data-test\="apm-automation-node-paymentservice"] .TextWithBackground___StyledText2-apm-sc-zvf4tb-3, textContent) = aiservice
+!replace(ButtercupPayments, , .TextWithBackground___StyledText2-apm-sc-zvf4tb-3, textContent) = CRM
+
+
+;tooltips
+!replace(checkoutservice, , .apm-automation-node-hover-checkoutservice .NodeHoverPanel__StyledNodeName-apm-sc-wtrhsx-3, textContent) = reportservice
+!replace(paymentservice, , .apm-automation-node-hover-paymentservice .NodeHoverPanel__StyledNodeName-apm-sc-wtrhsx-3, textContent) = aiservice
+!replace(ButtercupPayments, , .apm-automation-node-hover-ButtercupPayments .node-id-label, textContent) = CRM
+!replace(checkoutservice, , [data-test\="apm-automation-edge-hover-checkoutservice-paymentservice"] .LinkHoverPanel__StyledNodeName-apm-sc-1173nx-4, textContent) = reportservice
+paymentservice = aiservice
+checkoutservice = reportservice
+ButtercupPayments = CRM
+
+;workflow
+!replace(frontend:/cart/checkout, , .common__SmallTitle-apm-sc-1dxjib4-0.WorkflowHeading__StyledSelectionTitle-apm-sc-702017-2.sHkvm.apm-automation-service-title, textContent) = frontend:/revenue/report
+
+[Tag spotlight]
+grpc.hipstershop.PaymentService/Charge = grpc.revenue.AiService/report
+;!replace(frontend:/cart/checkout, , [data-test\="chip-value"][data-test-display-value\="frontend:/cart/checkout"][data-test-values\="frontend:/cart/checkout"] .ChipButtonStyles__StyledValueContentV2-apm-sc-3cp2bo-16, textContent) = frontend:/revenue/report
+;!replace(frontend:/cart/checkout, , [data-test\="apm-automation-tagSpotlight-analyzedTag-frontend:/cart/checkout"] .TagBreakdownstyles__StyledBarText-apm-sc-1y1ngbm-12, textContent) = frontend:/revenue/report
+frontend:/cart/checkout = frontend:/revenue/report
+
+[Traces list]
+!replace("/cart/checkout", , [data-test\="apm-automation-initiatingOperation"] .TraceExemplarsstyles__InitiatingOperationNameLabel-apm-sc-1eyjtp7-8, textContent) = "/revenue/report"
+payment-service = ai-service
+
+[Logs error]
+Failed payment processing = Failed customer info processing
